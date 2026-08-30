@@ -1,0 +1,133 @@
+@page
+@model FeedbackApp.Pages.IndexModel
+
+<h2>Share Your Experience</h2>
+
+<form method="post" id="experienceForm">
+    <div asp-validation-summary="ModelOnly"></div>
+
+    <div class="form-group">
+        <label asp-for="Experience.Name"></label>
+        <input asp-for="Experience.Name" class="form-control" />
+        <span asp-validation-for="Experience.Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Experience.TypeOfEntity"></label>
+        <select asp-for="Experience.TypeOfEntity" class="form-control">
+            <option value="">-- Select --</option>
+            <option value="Government">Government</option>
+            <option value="Private">Private</option>
+            <option value="Individual">Individual</option>
+        </select>
+        <span asp-validation-for="Experience.TypeOfEntity" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Experience.Email"></label>
+        <input asp-for="Experience.Email" class="form-control" />
+        <span asp-validation-for="Experience.Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Experience.PhoneNumber"></label>
+        <input asp-for="Experience.PhoneNumber" class="form-control" />
+        <span asp-validation-for="Experience.PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Experience.RegionId"></label>
+        <select asp-for="Experience.RegionId" id="RegionId" class="form-control"
+                asp-items="@(new SelectList(Model.Regions, "Id", "Name"))">
+            <option value="">-- Select Region --</option>
+        </select>
+        <span asp-validation-for="Experience.RegionId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Experience.WilayaId"></label>
+        <select asp-for="Experience.WilayaId" id="WilayaId" class="form-control">
+            <option value="">-- Select Wilaya --</option>
+        </select>
+        <span asp-validation-for="Experience.WilayaId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Experience.AreaId"></label>
+        <select asp-for="Experience.AreaId" id="AreaId" class="form-control">
+            <option value="">-- Select Area --</option>
+        </select>
+        <span asp-validation-for="Experience.AreaId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Experience.VillageId"></label>
+        <select asp-for="Experience.VillageId" id="VillageId" class="form-control">
+            <option value="">-- Select Village --</option>
+        </select>
+        <span asp-validation-for="Experience.VillageId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Experience.DetailsOfExperience"></label>
+        <textarea asp-for="Experience.DetailsOfExperience" class="form-control"></textarea>
+        <span asp-validation-for="Experience.DetailsOfExperience" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Experience.RemarksAndSuggestions"></label>
+        <textarea asp-for="Experience.RemarksAndSuggestions" class="form-control"></textarea>
+        <span asp-validation-for="Experience.RemarksAndSuggestions" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        document.getElementById("RegionId").addEventListener("change", function () {
+            populateDropdown("?handler=Wilayas", "RegionId", "WilayaId");
+            clearDropdown("AreaId");
+            clearDropdown("VillageId");
+        });
+
+        document.getElementById("WilayaId").addEventListener("change", function () {
+            populateDropdown("?handler=Areas", "WilayaId", "AreaId");
+            clearDropdown("VillageId");
+        });
+
+        document.getElementById("AreaId").addEventListener("change", function () {
+            populateDropdown("?handler=Villages", "AreaId", "VillageId");
+        });
+
+        function populateDropdown(handlerUrl, sourceId, targetId) {
+            const parentId = document.getElementById(sourceId).value;
+            const targetSelect = document.getElementById(targetId);
+            clearDropdown(targetId);
+
+            if (!parentId) return;
+
+            fetch(`${handlerUrl}&parentId=${parentId}`, {
+                method: "GET",
+                headers: { "RequestVerificationToken": token }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    data.forEach(item => {
+                        const option = document.createElement("option");
+                        option.value = item.id;
+                        option.text = item.name;
+                        targetSelect.appendChild(option);
+                    });
+                });
+        }
+
+        function clearDropdown(id) {
+            const select = document.getElementById(id);
+            select.innerHTML = '<option value="">-- Select --</option>';
+        }
+    </script>
+}

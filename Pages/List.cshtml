@@ -1,0 +1,48 @@
+@page
+@model FeedbackApp.Pages.ListModel
+
+<h2>Submitted Experiences</h2>
+
+<form method="get">
+    <select name="RegionId" asp-items="@(new SelectList(Model.Regions, "Id", "Name"))" onchange="this.form.submit()">
+        <option value="">-- All Regions --</option>
+    </select>
+
+    <select name="WilayaId" asp-items="@(new SelectList(Model.Wilayas, "Id", "Name"))" onchange="this.form.submit()">
+        <option value="">-- All Wilayas --</option>
+    </select>
+
+    <select name="AreaId" asp-items="@(new SelectList(Model.Areas, "Id", "Name"))" onchange="this.form.submit()">
+        <option value="">-- All Areas --</option>
+    </select>
+
+    <select name="VillageId" asp-items="@(new SelectList(Model.Villages, "Id", "Name"))" onchange="this.form.submit()">
+        <option value="">-- All Villages --</option>
+    </select>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Region</th>
+            <th>Wilaya</th>
+            <th>Area</th>
+            <th>Village</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Experiences)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Region?.Name</td>
+                <td>@item.Wilaya?.Name</td>
+                <td>@item.Area?.Name</td>
+                <td>@item.Village?.Name</td>
+                <td>@item.DetailsOfExperience</td>
+            </tr>
+        }
+    </tbody>
+</table>
