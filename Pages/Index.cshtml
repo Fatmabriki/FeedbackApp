@@ -1,4 +1,4 @@
-@page
+﻿ @page
 @model FeedbackApp.Pages.IndexModel
 
 <h2>Share Your Experience</h2>
@@ -46,7 +46,8 @@
 
     <div class="form-group">
         <label asp-for="Experience.WilayaId"></label>
-        <select asp-for="Experience.WilayaId" id="WilayaId" class="form-control">
+        <select asp-for="Experience.WilayaId" id="WilayaId" class="form-control" data-selected="@Model.Experience?.WilayaId"
+                asp-items="@(new SelectList(Model.Wilayas, "Id", "Name"))">
             <option value="">-- Select Wilaya --</option>
         </select>
         <span asp-validation-for="Experience.WilayaId" class="text-danger"></span>
@@ -54,7 +55,8 @@
 
     <div class="form-group">
         <label asp-for="Experience.AreaId"></label>
-        <select asp-for="Experience.AreaId" id="AreaId" class="form-control">
+        <select asp-for="Experience.AreaId" id="AreaId" class="form-control" data-selected="@Model.Experience?.AreaId"
+                asp-items="@(new SelectList(Model.Areas, "Id", "Name"))">
             <option value="">-- Select Area --</option>
         </select>
         <span asp-validation-for="Experience.AreaId" class="text-danger"></span>
@@ -62,7 +64,8 @@
 
     <div class="form-group">
         <label asp-for="Experience.VillageId"></label>
-        <select asp-for="Experience.VillageId" id="VillageId" class="form-control">
+        <select asp-for="Experience.VillageId" id="VillageId" class="form-control" data-selected="@Model.Experience?.VillageId"
+                asp-items="@(new SelectList(Model.Villages, "Id", "Name"))">
             <option value="">-- Select Village --</option>
         </select>
         <span asp-validation-for="Experience.VillageId" class="text-danger"></span>
@@ -84,7 +87,9 @@
 </form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script>
         const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
@@ -130,4 +135,4 @@
             select.innerHTML = '<option value="">-- Select --</option>';
         }
     </script>
-}
+}  

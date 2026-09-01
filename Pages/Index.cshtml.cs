@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -21,6 +21,9 @@ namespace FeedbackApp.Pages
         public Experience Experience { get; set; }
 
         public System.Collections.Generic.List<Region> Regions { get; set; }
+        public System.Collections.Generic.List<Wilaya> Wilayas { get; set; } = new();
+        public System.Collections.Generic.List<Area> Areas { get; set; } = new();
+        public System.Collections.Generic.List<Village> Villages { get; set; } = new();
 
         public async Task OnGetAsync()
         {
@@ -32,6 +35,30 @@ namespace FeedbackApp.Pages
             if (!ModelState.IsValid)
             {
                 Regions = await _context.Regions.ToListAsync();
+
+                // نعيد بناء السلسلة كاملة بناءً على القيم اللي المستخدم اختارها فعلاً،
+                // عشان الدروب داون ما ترجع فاضية لما الصفحة ترجع بسبب فشل التحقق
+                if (Experience.RegionId != 0)
+                {
+                    Wilayas = await _context.Wilayas
+                        .Where(w => w.RegionId == Experience.RegionId)
+                        .ToListAsync();
+                }
+
+                if (Experience.WilayaId != 0)
+                {
+                    Areas = await _context.Areas
+                        .Where(a => a.WilayaId == Experience.WilayaId)
+                        .ToListAsync();
+                }
+
+                if (Experience.AreaId != 0)
+                {
+                    Villages = await _context.Villages
+                        .Where(v => v.AreaId == Experience.AreaId)
+                        .ToListAsync();
+                }
+
                 return Page();
             }
 

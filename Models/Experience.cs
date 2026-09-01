@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace FeedbackApp.Models
 {
@@ -22,18 +23,26 @@ namespace FeedbackApp.Models
 
         [Required(ErrorMessage = "Region is required")]
         public int RegionId { get; set; }
+
+        [ValidateNever]
         public Region Region { get; set; }
 
         [Required(ErrorMessage = "Wilaya is required")]
         public int WilayaId { get; set; }
+
+        [ValidateNever]
         public Wilaya Wilaya { get; set; }
 
         [Required(ErrorMessage = "Area is required")]
         public int AreaId { get; set; }
+
+        [ValidateNever]
         public Area Area { get; set; }
 
         [Required(ErrorMessage = "Village is required")]
         public int VillageId { get; set; }
+
+        [ValidateNever]
         public Village Village { get; set; }
 
         [Required(ErrorMessage = "Details of Open Data Experience is required")]
